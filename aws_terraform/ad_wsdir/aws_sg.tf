@@ -4,8 +4,9 @@
 resource "aws_security_group" "ssh_rdp" {
   name        = "${var.pj-prefix}-ssh-rdp"
   description = "Allow SSH and RDP access"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = module.vpc.vpc_id
 
+  # SSH
   ingress {
     from_port   = 22
     to_port     = 22
@@ -13,6 +14,7 @@ resource "aws_security_group" "ssh_rdp" {
     cidr_blocks = [var.my_ip]
   }
 
+  # RDP
   ingress {
     from_port   = 3389
     to_port     = 3389
@@ -31,36 +33,3 @@ resource "aws_security_group" "ssh_rdp" {
     Name = "${var.pj-prefix}-ssh-rdp"
   }
 }
-
-/*
-resource "aws_security_group" "web" {
-  name        = "${var.pj-prefix}-web"
-  description = "Allow HTTP/HTTPS access"
-  vpc_id      = aws_vpc.main.id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${var.pj-prefix}-web"
-  }
-}
-*/

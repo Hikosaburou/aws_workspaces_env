@@ -5,8 +5,9 @@ resource "aws_directory_service_directory" "test" {
   type     = "SimpleAD"
 
   vpc_settings {
-    vpc_id     = aws_vpc.main.id
-    subnet_ids = [aws_subnet.private-a.id, aws_subnet.private-c.id]
+    vpc_id     = module.vpc.vpc_id
+    # ADに指定できるサブネットは2つまで。
+    subnet_ids = slice(module.vpc.public_subnets, 0, 2)
   }
 
   tags = {
