@@ -16,6 +16,38 @@ AWSアカウント上に以下を作成する
     - Simple AD (Small)
 - Amazon Workspaces
     - ディレクトリ設定
+    - WorkSpace
+
+## ディレクトリ構成
+
+aws_terraform/common ディレクトリに共通のファイルを置いて、各ディレクトリにシンボリックリンクを張っている。
+
+```
+./aws_terraform/
+├── ad_wsdir
+│   ├── aws_ad.tf
+│   ├── aws_ec2.tf
+│   ├── aws_iam.tf
+│   ├── aws_sg.tf
+│   ├── aws_vpc_module.tf
+│   ├── aws_workspaces_dir.tf
+│   ├── output.tf
+│   ├── terraform.tf -> ../common/terraform.tf
+│   ├── terraform.tfstate
+│   ├── terraform.tfvars -> ../common/terraform.tfvars
+│   ├── variables.tf
+│   └── versions.tf -> ../common/versions.tf
+├── common
+│   ├── terraform.tf
+│   ├── terraform.tfvars
+│   └── versions.tf
+└── workspaces
+    ├── aws_workspaces.tf
+    ├── terraform.tf -> ../common/terraform.tf
+    ├── terraform.tfvars -> ../common/terraform.tfvars
+    ├── variables.tf
+    └── versions.tf -> ../common/versions.tf
+```
 
 ## 準備
 
@@ -56,7 +88,7 @@ export AWS_SDK_LOAD_CONFIG=1
 
 ### terraform.tfvars の作成
 
-`terraform.tfvars` に個別の変数を埋め込む。以下の `$HOME` はユーザーのホームディレクトリに適宜書き換える (変数展開ができなかったため)
+`aws_terraform/common/terraform.tfvars` に個別の変数を埋め込む。以下の `$HOME` はユーザーのホームディレクトリに適宜書き換える (変数展開ができなかったため)
 
 ```
 public_key_path="$HOME/.ssh/keys/test.pub"
@@ -68,17 +100,18 @@ ad_domain_name="test.manabu-yazawa.com"
 各項目に以下要領で値を入れる
 
 | 項目 | 内容 |
-|  ------ | ------ |
-|  public_key_path | 公開鍵ファイルのパス |
-|  my_ip | SSHの接続元IP |
+| ------ | ------ |
+| public_key_path | 公開鍵ファイルのパス |
+| my_ip | SSHの接続元IP |
 | ad_admin_password | ADの管理者パスワード |
 | ad_domain_name | ADのドメイン名 |
 
 ## デプロイ
 
-以下コマンドで構成を確認する。
+aws_terraform/ad_wsr, aws_terraform/workspaces ディレクトリで以下コマンドを実行し、構成を確認する。
 
 ```
+$ terraform init #初回のみ
 $ terraform plan
 ```
 
